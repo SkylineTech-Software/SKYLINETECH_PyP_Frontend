@@ -1,14 +1,16 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <div class="row">
+    <div class="row" style="display: flex">
       <div
-        class="col-xs-12 col-sm-3 col-md-3 col-lg-4 col-xl-4 q-px-sm q-pb-xs"
-      ></div>
+        class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-px-sm q-pb-xs"
+      >
+        dfadsadasd
+      </div>
       <div
-        class="q-pa-md q-pt-xl col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 q-px-sm q-pb-xs"
+        class="q-pa-md q-pt-xl col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-px-sm q-pb-xs"
       >
         <div class="col-md-12 col-xs-12 col-sm-12">
-          <q-card flat bordered style="min-height: 300px">
+          <q-card style="min-height: 300px; box-shadow: none !important">
             <q-card-section>
               <q-form @submit="validarUsuario" class="q-gutter-md">
                 <div
@@ -53,9 +55,6 @@
           </q-card>
         </div>
       </div>
-      <div
-        class="col-xs-12 col-sm-6 col-md-3 col-lg-4 col-xl-4 q-px-sm q-pb-xs"
-      ></div>
     </div>
     <q-footer bordered>
       <q-toolbar>
