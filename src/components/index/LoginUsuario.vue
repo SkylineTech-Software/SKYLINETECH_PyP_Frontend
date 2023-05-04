@@ -1,7 +1,16 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <div class="row" style="display: flex">
+    <div
+      class="row"
+      style="
+        display: flex;
+        height: 94vh;
+        justify-content: center;
+        align-items: center;
+      "
+    >
       <div
+        v-if="$q.screen.md || $q.screen.lg || $q.screen.xl"
         class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-px-sm q-pb-xs"
       >
         dfadsadasd
