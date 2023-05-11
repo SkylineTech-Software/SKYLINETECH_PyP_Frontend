@@ -1,3 +1,4 @@
+import { Loading, Notify } from "quasar";
 import axios from "axios";
 
 const helpers = {
@@ -21,8 +22,72 @@ const helpers = {
         console.error(error);
       });
   },
-  prueba() {
-    console.log("pruebaaaa");
+  validarCamposForm(usuario, pass) {
+    if (!usuario.value || !pass.value) {
+      return false;
+    }
+    return true;
+  },
+  showCargando() {
+    Loading.show();
+  },
+  hideCargando() {
+    Loading.hide();
+  },
+  mostrarMensaje(mensaje, tiempo) {
+    if (mensaje) {
+      let timeReal = 3000;
+      if (tiempo) {
+        timeReal = tiempo;
+      }
+      Notify.create({
+        position: "top",
+        color: "positive",
+        message: `<p align="center" style="width: 150px;"><br> ${mensaje}</p>`,
+        html: true,
+        type: "white",
+        multiLine: true,
+        actions: [
+          {
+            label: "Cerrar",
+            color: "white",
+            style: "border: 1px solid #fff; margin: auto;",
+          },
+        ],
+        timeout: timeReal,
+      });
+    }
+  },
+  mostrarAlerta(mensaje, tiempo) {
+    if (mensaje) {
+      let timeReal = 3000;
+      if (tiempo) {
+        timeReal = tiempo;
+      }
+      Notify.create({
+        position: "top",
+        color: "negative",
+        message: `<p align="center" style="width: 150px;"><br> ${mensaje}</p>`,
+        html: true,
+        type: "white",
+        multiLine: true,
+        actions: [
+          {
+            label: "Cerrar",
+            color: "white",
+            style: "border: 1px solid #fff; margin: auto;",
+          },
+        ],
+        timeout: timeReal,
+      });
+    }
+  },
+  cargarLista(lista) {
+    let nuevaLista = [];
+    lista.forEach((e) => {
+      nuevaLista.push(e.nombre);
+    });
+    return nuevaLista;
   },
 };
 

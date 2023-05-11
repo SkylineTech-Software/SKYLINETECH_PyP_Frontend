@@ -1,63 +1,74 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <div
-      class="row"
-      style="
-        display: flex;
-        height: 94vh;
-        justify-content: center;
-        align-items: center;
-      "
-    >
+    <div class="row ppal-login">
       <div
         v-if="$q.screen.md || $q.screen.lg || $q.screen.xl"
-        class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-px-sm q-pb-xs"
-      >
-        dfadsadasd
-      </div>
+        class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-pb-xs img-aside"
+      ></div>
       <div
         class="q-pa-md q-pt-xl col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-px-sm q-pb-xs"
       >
         <div class="col-md-12 col-xs-12 col-sm-12">
           <q-card style="min-height: 300px; box-shadow: none !important">
             <q-card-section>
-              <q-form @submit="validarUsuario" class="q-gutter-md">
+              <div
+                class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-md"
+              >
+                <div class="flex justify-center q-pb-xl">
+                  <q-img
+                    :src="logo"
+                    spinner-color="secondary"
+                    class="login-logo"
+                  />
+                </div>
+              </div>
+              <q-form @submit="validarUsuario()" class="q-gutter-md">
                 <div
-                  class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-xs"
+                  class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-xs div-login"
                 >
                   <q-input
-                    style="width: 80%; margin: auto"
-                    filled
                     dense
+                    outlined
+                    class="input-login"
                     v-model="usuario"
-                    label="Usuario"
-                    :rules="[
-                      (val) => (val && val.length > 0) || 'Ingrese el usuario',
-                    ]"
+                    label="Usuario*"
                   />
                 </div>
                 <div
-                  class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-xs"
+                  class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-xs flex"
                 >
                   <q-input
-                    style="width: 80%; margin: auto"
-                    filled
                     dense
-                    type="password"
+                    outlined
+                    class="input-login"
                     v-model="contrasena"
-                    label="Contraseña"
-                    :rules="[]"
-                  />
+                    label="Contraseña*"
+                    :type="isPwd ? 'password' : 'text'"
+                  >
+                    <template v-slot:append>
+                      <q-icon
+                        :name="isPwd ? 'visibility_off' : 'visibility'"
+                        class="cursor-pointer"
+                        @click="verContrasena()"
+                      />
+                    </template>
+                  </q-input>
                 </div>
                 <div
-                  class="flex justify-center col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-pb-xs q-pt-md"
+                  class="flex justify-center col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3"
                 >
                   <q-btn
-                    label="Ingresar"
+                    class="btn-form"
+                    label="Login"
                     type="submit"
-                    color="primary"
                     size="md"
                   />
+                </div>
+                <div
+                  class="flex justify-center items-center col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3"
+                >
+                  <span style="font-size: 16px">By</span
+                  ><img :src="logoSkyline" style="width: 200px" />
                 </div>
               </q-form>
             </q-card-section>
@@ -65,42 +76,66 @@
         </div>
       </div>
     </div>
-    <q-footer bordered>
-      <q-toolbar>
-        <q-toolbar-title>© {{ anoActual }} Skyline Tech v1.0.0</q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-import helpers from "../../helpers/helpers.js";
+import helpers from "src/helpers/helpers.js";
+import logo from "assets/img/logopyp2.png";
+import imgAside from "assets/img/img-aside.jpg";
+import logoSkyline from "assets/img/logo-skyline.png";
 
 export default defineComponent({
   name: "LoginUsuario",
   setup() {
     const router = useRouter();
-    const usuario = ref(null);
-    const contrasena = ref(null);
+    const usuario = ref("");
+    const contrasena = ref("");
     const data = ref(null);
+    const isPwd = ref(true);
+    const camposValidos = ref(true);
+    const accesoValido = ref(true);
     const url = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
 
     function validarUsuario() {
-      router.push({ name: "inicio" });
-
-      helpers.axiosGet(url).then((respuesta) => {
-        data.value = respuesta.drinks;
-        data.value.forEach((element) => {
-          console.log(element);
+      helpers.showCargando();
+      camposValidos.value = helpers.validarCamposForm(usuario, contrasena);
+      if (!camposValidos.value) {
+        helpers.mostrarAlerta("Los campos no deben estar vacios", 3000);
+        helpers.hideCargando();
+        return;
+      }
+      helpers
+        .axiosGet(url)
+        .then((respuesta) => {
+          accesoValido.value = respuesta.drinks;
+          if (accesoValido.value) {
+            helpers.mostrarMensaje("Acceso válido", 3000);
+            // router.push({ name: "inicio" });
+          } else {
+            helpers.mostrarAlerta("Usuario y/o contraseña incorrectos", 3000);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      });
+      helpers.hideCargando();
+    }
+
+    function verContrasena() {
+      isPwd.value = !isPwd.value;
     }
 
     return {
+      logo,
+      isPwd,
+      imgAside,
       usuario,
       contrasena,
+      logoSkyline,
+      verContrasena,
       validarUsuario,
     };
   },

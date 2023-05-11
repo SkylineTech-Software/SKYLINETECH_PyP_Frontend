@@ -1,4 +1,94 @@
-// app global css in SCSS form
-.q-field--filled .q-field__control {
-  background-color: #e9efff;
+/**Header inicio*/
+.header-inicio {
+  background-color: $medium-green;
+}
+/**Aside menu*/
+.img-aside-menu {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.aside-menu {
+  background-color: $medium-green;
+  color: #fff;
+}
+.q-item.q-router-link--active {
+  color: #fff;
+  background-color: #21ff1a1f;
+}
+/**Login*/
+.ppal-login {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.login-logo {
+  max-width: 30%;
+  max-height: 30%;
+  border-radius: 10px;
+}
+.input-login {
+  width: 50%;
+  margin: auto;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px rgb(255, 255, 255) inset !important;
+  background-color: transparent !important;
+}
+.input-login text:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px rgb(255, 255, 255) inset !important;
+  background-color: transparent !important;
+}
+.q-field--dense .q-field__label {
+  color: $light-green;
+}
+.q-field--outlined .q-field__control:before {
+  border: 1px solid $light-green;
+}
+.q-field__control {
+  color: $medium-green;
+}
+.q-field--dense .q-field__control {
+  border-radius: 10px !important;
+}
+.btn-form {
+  width: 50%;
+  border-radius: 10px;
+  background-color: $medium-green;
+  color: #fff;
+}
+.img-aside {
+  background-image: linear-gradient(rgba(0, 90, 20, 0.5), rgba(0, 90, 20, 0.5)),
+    url(../assets/img/img-aside.jpg);
+  min-height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+/**Crear producto*/
+.title-green {
+  color: $medium-green;
+}
+.card {
+  box-shadow: 0 1px 5px $light-green, 0 2px 2px $light-green;
+  border: 1px solid $light-green;
+  border-radius: 4px;
+}
+.btn-add {
+  border-radius: 10px;
+  background-color: $medium-green;
+  color: #fff;
+}
+
+.btn-add:hover {
+  background-color: $light-green;
+  transition: 1s all;
+}
+
+.btn-cancel {
+  border-radius: 10px;
+  background-color: $grey-page;
+  color: #fff;
 }

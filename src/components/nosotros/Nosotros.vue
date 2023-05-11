@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <h1>Nosotros</h1>
+    <q-item-label class="text-h1">Nosotros</q-item-label>
   </q-page>
 </template>
 

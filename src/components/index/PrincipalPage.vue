@@ -1,142 +1,87 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header class="header-inicio" elevated>
       <q-toolbar>
         <q-btn
           flat
           dense
           round
-          icon="menu"
+          :icon="
+            $q.screen.md || $q.screen.lg || $q.screen.xl
+              ? icon
+              : 'arrow_forward'
+          "
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> P&P </q-toolbar-title>
+        <q-toolbar-title> Pumps S.A.S </q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <div style="display: flex; justify-content: center; align-items: center">
-        <q-img
-          :src="logo"
-          spinner-color="primary"
-          style="max-width: 100%; max-height: 100%"
-        />
+    <q-drawer
+      class="aside-menu"
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+    >
+      <div class="flex items-center justify-center items-center">
+        <q-img class="img-aside-menu" :src="logo" spinner-color="primary" />
       </div>
       <q-separator />
       <q-list>
-        <span class="text-overline q-pl-sm">dsads</span>
-        <q-item
-          clickable
-          :to="'nosotros'"
-          style="
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            position: relative;
-          "
-        >
-          <q-icon size="2em" name="description" />
+        <span class="text-overline q-pl-sm">Información</span>
+        <q-item class="flex row items-center" clickable :to="'nosotros'">
+          <i class="las la-user-circle" style="font-size: 32px"></i>
           <q-item-label class="q-pl-sm">Sobre nosotros</q-item-label>
         </q-item>
-        <q-separator />
-        <span class="text-overline q-pl-sm">sdsadas</span>
-        <q-item
-          clickable
-          :to="'productos'"
-          style="
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            position: relative;
-          "
-        >
+        <hr />
+        <span class="text-overline q-pl-sm">Equipos</span>
+        <q-item clickable :to="'productos'" class="flex row items-center">
           <q-icon size="2em" name="format_list_bulleted" />
-          <q-item-label class="q-pl-sm">Productos</q-item-label>
+          <q-item-label class="q-pl-sm">Ver equipos</q-item-label>
         </q-item>
-        <q-item
-          clickable
-          :to="'crear-producto'"
-          style="
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            position: relative;
-          "
-        >
+        <q-item class="flex row items-center" clickable :to="'crear-producto'">
           <q-icon size="2em" name="add_circle_outline" />
-          <q-item-label class="q-pt-sm q-pl-sm">Crear producto</q-item-label>
+          <q-item-label class="q-pt-sm q-pl-sm">Crear equipo</q-item-label>
         </q-item>
-        <q-separator />
+        <hr />
         <span class="text-overline q-pl-sm">Informes</span>
-        <q-item
-          clickable
-          :to="'informes'"
-          style="
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            position: relative;
-          "
-        >
-          <q-icon size="2em" name="" />
-          <q-item-label class="q-pl-sm">Informes</q-item-label>
+        <q-item class="flex row items-center" clickable :to="'informes'">
+          <i class="fa-regular fa-rectangle-list" style="font-size: 22px"></i>
+          <q-item-label class="q-pl-sm">Ver informes</q-item-label>
         </q-item>
-        <q-separator />
+        <q-item class="flex row items-center" clickable :to="'crear-informe'">
+          <q-icon size="2em" name="addchart" />
+          <q-item-label class="q-pl-sm">Crear informe</q-item-label>
+        </q-item>
+        <hr />
       </q-list>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
-
-    <q-footer bordered>
-      <q-toolbar>
-        <q-toolbar-title>© {{ anoActual }} Skyline Tech v1.0.0</q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
-import logo from "assets/img/logopyp.jpeg";
+import logo from "assets/img/logopyp2.png";
 
 export default defineComponent({
   name: "HomePage",
 
   setup() {
     const leftDrawerOpen = ref(false);
-    const anoActual = new Date().getFullYear();
+    const icon = ref("arrow_back");
 
-    const url = "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif";
-    const linksMenu = [
-      {
-        title: "Sobre nosotros",
-        icon: "fa-light fa-file-lines",
-        link: "/",
-        caption: "sadadada",
-      },
-      {
-        title: "Productos",
-        icon: "format_list_bulleted",
-        link: "",
-        caption: "sadadada",
-      },
-      {
-        title: "Crear producto",
-        icon: "add_circle_outline",
-        link: "",
-        caption: "sadadada",
-      },
-    ];
     return {
-      url,
       logo,
-      anoActual,
-      linksMenu,
+      icon,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
+        icon.value = leftDrawerOpen.value ? "arrow_back" : "arrow_forward";
       },
     };
   },
