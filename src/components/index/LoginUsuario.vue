@@ -32,6 +32,9 @@
                     class="input-login"
                     v-model="usuario"
                     label="Usuario*"
+                    :rules="[
+                      (value) => !!value || 'El campo Usuario es obligatorio.',
+                    ]"
                   />
                 </div>
                 <div
@@ -44,6 +47,10 @@
                     v-model="contrasena"
                     label="Contraseña*"
                     :type="isPwd ? 'password' : 'text'"
+                    :rules="[
+                      (value) =>
+                        !!value || 'El campo Contraseña es obligatorio.',
+                    ]"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -95,18 +102,11 @@ export default defineComponent({
     const contrasena = ref("");
     const data = ref(null);
     const isPwd = ref(true);
-    const camposValidos = ref(true);
     const accesoValido = ref(true);
     const url = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
 
     function validarUsuario() {
       helpers.showCargando();
-      camposValidos.value = helpers.validarCamposForm(usuario, contrasena);
-      if (!camposValidos.value) {
-        helpers.mostrarAlerta("Los campos no deben estar vacios", 3000);
-        helpers.hideCargando();
-        return;
-      }
       helpers
         .axiosGet(url)
         .then((respuesta) => {
@@ -117,6 +117,7 @@ export default defineComponent({
           } else {
             helpers.mostrarAlerta("Usuario y/o contraseña incorrectos", 3000);
           }
+          router.push({ name: "inicio" });
         })
         .catch((error) => {
           console.error(error);

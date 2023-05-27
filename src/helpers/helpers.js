@@ -22,10 +22,12 @@ const helpers = {
         console.error(error);
       });
   },
-  validarCamposForm(usuario, pass) {
-    if (!usuario.value || !pass.value) {
-      return false;
-    }
+  validarCamposForm(camposForm = []) {
+    camposForm.forEach((e) => {
+      if (!e.value) {
+        return false;
+      }
+    });
     return true;
   },
   showCargando() {
