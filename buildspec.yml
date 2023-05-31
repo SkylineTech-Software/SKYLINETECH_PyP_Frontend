@@ -9,6 +9,9 @@ phases:
     commands:
       - echo "Building Vue.js project..."
       - npm run build
+  deploy:
+    commands:
+        - aws s3 sync dist/ s3://codepipeline-us-east-2-702087852916
 artifacts:
   files:
     - '**/*'
