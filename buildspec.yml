@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing dependencies..."
+      - npm install
+  build:
+    commands:
+      - echo "Building Vue.js project..."
+      - npm run build
+      - aws s3 cp dist/ s3://codepipeline-us-east-2-702087852916
+artifacts:
+  files:
+    - '**/*'
