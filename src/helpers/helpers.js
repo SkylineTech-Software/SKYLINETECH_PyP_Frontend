@@ -4,7 +4,7 @@ import axios from "axios";
 const helpers = {
   async axiosGet(url, datos = null) {
     return await axios
-      .get(url, { params: datos })
+      .get(url, datos)
       .then((respuesta) => {
         return respuesta.data;
       })
@@ -14,7 +14,7 @@ const helpers = {
   },
   async axiosPost(url, datos) {
     return await axios
-      .post(url, { params: datos })
+      .post(url, datos)
       .then((respuesta) => {
         return respuesta;
       })
@@ -22,21 +22,13 @@ const helpers = {
         console.error(error);
       });
   },
-  validarCamposForm(camposForm = []) {
-    camposForm.forEach((e) => {
-      if (!e.value) {
-        return false;
-      }
-    });
-    return true;
-  },
   showCargando() {
     Loading.show();
   },
   hideCargando() {
     Loading.hide();
   },
-  mostrarMensaje(mensaje, tiempo) {
+  showMessage(mensaje, tiempo) {
     if (mensaje) {
       let timeReal = 3000;
       if (tiempo) {
@@ -60,16 +52,16 @@ const helpers = {
       });
     }
   },
-  mostrarAlerta(mensaje, tiempo) {
-    if (mensaje) {
+  showAlert(msj, time) {
+    if (msj) {
       let timeReal = 3000;
-      if (tiempo) {
-        timeReal = tiempo;
+      if (time) {
+        timeReal = time;
       }
       Notify.create({
         position: "top",
         color: "negative",
-        message: `<p align="center" style="width: 150px;"><br> ${mensaje}</p>`,
+        message: `<p align="center" style="width: 150px;"><br> ${msj}</p>`,
         html: true,
         type: "white",
         multiLine: true,
@@ -84,12 +76,12 @@ const helpers = {
       });
     }
   },
-  cargarLista(lista) {
-    let nuevaLista = [];
-    lista.forEach((e) => {
-      nuevaLista.push(e.nombre);
+  loadList(list) {
+    let newList = [];
+    list.forEach((e) => {
+      newList.push({ label: e.name, value: e.id });
     });
-    return nuevaLista;
+    return newList;
   },
 };
 

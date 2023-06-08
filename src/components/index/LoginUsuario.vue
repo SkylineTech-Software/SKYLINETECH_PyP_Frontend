@@ -112,10 +112,10 @@ export default defineComponent({
         .then((respuesta) => {
           accesoValido.value = respuesta.drinks;
           if (accesoValido.value) {
-            helpers.mostrarMensaje("Acceso válido", 3000);
+            helpers.showMessage("Acceso válido", 3000);
             // router.push({ name: "inicio" });
           } else {
-            helpers.mostrarAlerta("Usuario y/o contraseña incorrectos", 3000);
+            helpers.showAlert("Usuario y/o contraseña incorrectos", 3000);
           }
           router.push({ name: "inicio" });
         })

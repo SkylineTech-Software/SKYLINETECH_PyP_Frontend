@@ -13,21 +13,37 @@
               {{ "Equipos" }}
             </div>
             <q-card class="card q-pb-md">
-              <q-form @submit="crearProducto()">
+              <q-form @submit="createProduct()">
                 <q-card-section class="col-12 row">
                   <div
-                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm row"
                   >
-                    <q-input
-                      dense
-                      outlined
-                      v-model="cliente"
-                      label="Cliente*"
-                      :rules="[
-                        (value) =>
-                          !!value || 'El campo Cliente es obligatorio.',
-                      ]"
-                    ></q-input>
+                    <div class="col-10">
+                      <q-select
+                        dense
+                        outlined
+                        label="Cliente*"
+                        :rules="[
+                          (value) =>
+                            !!value || 'El campo Cliente es obligatorio..',
+                        ]"
+                        v-model="clientId"
+                        :options="clientOptions"
+                      ></q-select>
+                    </div>
+                    <div class="col-2 q-px-sm q-pb-xs">
+                      <q-btn
+                        icon="add_box"
+                        style="color: #678966"
+                        @click="modalClient = true"
+                        size="md"
+                        class="q-mt-xs"
+                        dense
+                      />
+                      <q-tooltip anchor="center middle"
+                        >Agregar cliente</q-tooltip
+                      >
+                    </div>
                   </div>
                   <div
                     class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
@@ -35,54 +51,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="telefono"
-                      label="Teléfono"
-                    ></q-input>
-                  </div>
-                  <div
-                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
-                  >
-                    <q-input
-                      dense
-                      outlined
-                      type="email"
-                      v-model="email"
-                      label="Email"
-                      :rules="[
-                        !!value || 'El campo Email es obligatorio.',
-                        (value) =>
-                          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-                          'Ingrese un Email válido.',
-                      ]"
-                    ></q-input>
-                  </div>
-                  <div
-                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
-                  >
-                    <q-input
-                      dense
-                      outlined
-                      v-model="direccion"
-                      label="Dirección"
-                    ></q-input>
-                  </div>
-                  <div
-                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
-                  >
-                    <q-input
-                      dense
-                      outlined
-                      v-model="sede"
-                      label="Sede"
-                    ></q-input>
-                  </div>
-                  <div
-                    class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
-                  >
-                    <q-input
-                      dense
-                      outlined
-                      v-model="referencia"
+                      v-model="reference"
                       label="Referencia*"
                       :rules="[
                         (value) =>
@@ -96,7 +65,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="marca"
+                      v-model="trademark"
                       label="Marca*"
                       :rules="[
                         (value) => !!value || 'El campo Marca es obligatorio.',
@@ -109,7 +78,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="rodamientos"
+                      v-model="bearings"
                       label="Rodamientos"
                     ></q-input>
                   </div>
@@ -119,7 +88,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="modelo"
+                      v-model="model"
                       label="Modelo*"
                       :rules="[
                         (value) => !!value || 'El campo Modelo es obligatorio.',
@@ -132,7 +101,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="serie"
+                      v-model="serial"
                       label="Serie"
                     ></q-input>
                   </div>
@@ -142,7 +111,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="potencia"
+                      v-model="potency"
                       label="Potencia*"
                       :rules="[
                         (value) =>
@@ -156,7 +125,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="voltaje"
+                      v-model="voltage"
                       label="Voltaje*"
                       :rules="[
                         (value) =>
@@ -175,7 +144,7 @@
                         (value) =>
                           !!value || 'El campo Corriente es obligatorio.',
                       ]"
-                      v-model="corriente"
+                      v-model="current"
                       :options="opcionesTipoEquipos"
                     ></q-select>
                   </div>
@@ -200,6 +169,120 @@
           </div>
         </div>
       </div>
+      <!--Modal crear cliente-->
+      <template>
+        <q-page>
+          <q-dialog v-model="modalClient" persistent full-width>
+            <div class="row">
+              <q-card class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
+                <div class="q-pl-lg q-pt-lg row col-12 q-pb-md">
+                  <q-item-label class="title-green text-h5 text-bold">
+                    {{ "Crear cliente" }}
+                  </q-item-label>
+                </div>
+                <q-separator />
+                <div class="q-pa-md row col-12">
+                  <div class="col-md-12 col-xs-12 col-sm-12">
+                    <div class="q-ma-sm">
+                      <div class="row title-green text-bold q-pb-md">
+                        {{ "Cliente" }}
+                      </div>
+                      <q-card class="card q-pb-md">
+                        <q-form @submit="createClient()">
+                          <q-card-section class="col-12 row">
+                            <div
+                              class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                            >
+                              <q-input
+                                dense
+                                outlined
+                                v-model="name"
+                                label="Nombre*"
+                                :rules="[
+                                  (value) =>
+                                    !!value ||
+                                    'El campo Nombre es obligatorio.',
+                                ]"
+                              ></q-input>
+                            </div>
+                            <div
+                              class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                            >
+                              <q-input
+                                dense
+                                outlined
+                                v-model="address"
+                                label="Dirección*"
+                                :rules="[
+                                  (value) =>
+                                    !!value ||
+                                    'El campo Dirección es obligatorio.',
+                                ]"
+                              ></q-input>
+                            </div>
+                            <div
+                              class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                            >
+                              <q-input
+                                dense
+                                outlined
+                                v-model="phone"
+                                label="Telefono*"
+                                :rules="[
+                                  (value) =>
+                                    !!value ||
+                                    'El campo Telefono es obligatorio.',
+                                ]"
+                              ></q-input>
+                            </div>
+                            <div
+                              class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                            >
+                              <q-input
+                                dense
+                                outlined
+                                v-model="campus"
+                                label="Sede*"
+                                :rules="[
+                                  (value) =>
+                                    !!value || 'El campo Sede es obligatorio.',
+                                ]"
+                              ></q-input>
+                            </div>
+                            <div
+                              class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                            >
+                              <q-input
+                                dense
+                                outlined
+                                v-model="email"
+                                label="Email*"
+                                :rules="[
+                                  (value) =>
+                                    !!value || 'El campo Email es obligatorio.',
+                                ]"
+                              ></q-input>
+                            </div>
+                          </q-card-section>
+                        </q-form>
+                      </q-card>
+                    </div>
+                  </div>
+                </div>
+                <q-separator />
+                <q-card-actions align="right">
+                  <q-btn label="Aceptar" class="q-ma-sm btn-add" />
+                  <q-btn
+                    label="Cancelar"
+                    @click="modalClient = false"
+                    class="q-ma-sm btn-cancel"
+                  />
+                </q-card-actions>
+              </q-card>
+            </div>
+          </q-dialog>
+        </q-page>
+      </template>
     </div>
   </q-page>
 </template>
@@ -208,86 +291,107 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import helpers from "src/helpers/helpers.js";
+import environments from "assets/environment/environment.js";
 
 export default defineComponent({
   name: "Crear-Producto",
+  components: {},
   setup() {
     const route = useRoute();
     const id = route.params.id;
-    const cliente = ref(null);
-    const telefono = ref(null);
-    const direccion = ref(null);
-    const sede = ref(null);
+    const clientId = ref(null);
+    const name = ref(null);
+    const address = ref(null);
+    const phone = ref(null);
+    const campus = ref(null);
     const email = ref(null);
-    const referencia = ref(null);
-    const marca = ref(null);
-    const rodamientos = ref(null);
-    const modelo = ref(null);
-    const serie = ref(null);
-    const potencia = ref(null);
-    const voltaje = ref(null);
-    const corriente = ref([]);
+    const reference = ref(null);
+    const trademark = ref(null);
+    const bearings = ref(null);
+    const model = ref(null);
+    const serial = ref(null);
+    const potency = ref(null);
+    const voltage = ref(null);
+    const clientOptions = ref([]);
+    const modalClient = ref(false);
+    const current = ref([]);
     const opcionesTipoEquipos = ref([]);
     const tipoEquipos = [
-      { id: 1, nombre: "Monofásico" },
-      { id: 1, nombre: "Trifásico" },
+      { id: 1, name: "Monofásico" },
+      { id: 1, name: "Trifásico" },
     ];
 
     function inicio() {
-      opcionesTipoEquipos.value = helpers.cargarLista(tipoEquipos);
+      opcionesTipoEquipos.value = helpers.loadList(tipoEquipos);
+      getClients();
     }
 
-    function crearProducto() {
+    function createProduct() {
       const data = {
-        cliente: {
-          nombre: cliente.value,
-          telefono: telefono.value,
-          direccion: direccion.value,
-          sede: sede.value,
-          email: email.value,
-        },
-        referencia: referencia.value,
-        marca: marca.value,
-        rodamientos: rodamientos.value,
-        modelo: modelo.value,
-        serie: serie.value,
-        potencia: potencia.value,
-        voltaje: voltaje.value,
-        corriente: corriente.value,
+        clientId: clientId.value.value,
+        reference: reference.value,
+        trademark: trademark.value,
+        bearings: bearings.value,
+        model: model.value,
+        serial: serial.value,
+        potency: potency.value,
+        voltage: voltage.value,
+        current: current.value.label,
       };
 
       // helpers
-      //   .axiosPost("ruta", data)
-      //   .then((respuesta) => {})
+      //   .axiosPost(`${environments.API_URL}/product`, { data })
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
       //   .catch((error) => {
       //     console.error(error);
       //   });
 
-      console.log(data);
+      console.log({ data });
+    }
+
+    function getClients() {
+      helpers
+        .axiosGet(`${environments.API_URL}/client`)
+        .then((response) => {
+          clientOptions.value = helpers.loadList(response.data.clients);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function createClient() {
+      console.log("create client");
     }
 
     onMounted(inicio);
 
     return {
       id,
-      corriente,
+      current,
       route,
+      name,
+      address,
+      phone,
+      campus,
       email,
-      cliente,
-      telefono,
-      direccion,
-      sede,
-      referencia,
-      marca,
-      rodamientos,
-      modelo,
-      serie,
-      potencia,
-      voltaje,
+      clientId,
+      reference,
+      trademark,
+      bearings,
+      model,
+      serial,
+      potency,
+      voltage,
+      modalClient,
       tipoEquipos,
+      clientOptions,
       opcionesTipoEquipos,
       inicio,
-      crearProducto,
+      createProduct,
+      createClient,
     };
   },
 });
