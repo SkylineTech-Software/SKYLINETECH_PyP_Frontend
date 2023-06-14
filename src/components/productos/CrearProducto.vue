@@ -65,7 +65,7 @@
                     <q-input
                       dense
                       outlined
-                      v-model="trademark"
+                      v-model="tradeMark"
                       label="Marca*"
                       :rules="[
                         (value) => !!value || 'El campo Marca es obligatorio.',
@@ -156,10 +156,19 @@
                       class="q-ma-sm btn-add"
                       no-caps
                       type="submit"
+                      v-if="!id"
+                    />
+                    <q-btn
+                      label="Editar"
+                      class="q-ma-sm btn-add"
+                      no-caps
+                      @click="prueba()"
+                      v-if="id"
                     />
                     <q-btn
                       class="q-ma-sm btn-cancel"
                       label="Cancelar"
+                      @click="cancelar()"
                       no-caps
                     />
                   </div>
@@ -174,7 +183,10 @@
         <q-page>
           <q-dialog v-model="modalClient" persistent full-width>
             <div class="row">
-              <q-card class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
+              <q-card
+                class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8"
+                style="margin: auto"
+              >
                 <div class="q-pl-lg q-pt-lg row col-12 q-pb-md">
                   <q-item-label class="title-green text-h5 text-bold">
                     {{ "Crear cliente" }}
@@ -184,11 +196,8 @@
                 <div class="q-pa-md row col-12">
                   <div class="col-md-12 col-xs-12 col-sm-12">
                     <div class="q-ma-sm">
-                      <div class="row title-green text-bold q-pb-md">
-                        {{ "Cliente" }}
-                      </div>
                       <q-card class="card q-pb-md">
-                        <q-form @submit="createClient()">
+                        <q-form>
                           <q-card-section class="col-12 row">
                             <div
                               class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
@@ -227,7 +236,7 @@
                                 dense
                                 outlined
                                 v-model="phone"
-                                label="Telefono*"
+                                label="Teléfono*"
                                 :rules="[
                                   (value) =>
                                     !!value ||
@@ -242,11 +251,7 @@
                                 dense
                                 outlined
                                 v-model="campus"
-                                label="Sede*"
-                                :rules="[
-                                  (value) =>
-                                    !!value || 'El campo Sede es obligatorio.',
-                                ]"
+                                label="Sede"
                               ></q-input>
                             </div>
                             <div
@@ -260,6 +265,9 @@
                                 :rules="[
                                   (value) =>
                                     !!value || 'El campo Email es obligatorio.',
+                                  (value) =>
+                                    /\S+@\S+\.\S+/.test(value) ||
+                                    'Ingrese un correo electrónico válido.',
                                 ]"
                               ></q-input>
                             </div>
@@ -270,8 +278,12 @@
                   </div>
                 </div>
                 <q-separator />
-                <q-card-actions align="right">
-                  <q-btn label="Aceptar" class="q-ma-sm btn-add" />
+                <q-card-actions align="left">
+                  <q-btn
+                    label="Aceptar"
+                    class="q-ma-sm btn-add"
+                    @click="createClient()"
+                  />
                   <q-btn
                     label="Cancelar"
                     @click="modalClient = false"
@@ -289,7 +301,7 @@
 
 <script>
 import { defineComponent, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import helpers from "src/helpers/helpers.js";
 import environments from "assets/environment/environment.js";
 
@@ -298,15 +310,17 @@ export default defineComponent({
   components: {},
   setup() {
     const route = useRoute();
-    const id = route.params.id;
-    const clientId = ref(null);
+    const router = useRouter();
+    // const id = route.params.id;
+    const id = ref(null);
+    const clientId = ref({ label: "", value: "" });
     const name = ref(null);
     const address = ref(null);
     const phone = ref(null);
     const campus = ref(null);
     const email = ref(null);
     const reference = ref(null);
-    const trademark = ref(null);
+    const tradeMark = ref(null);
     const bearings = ref(null);
     const model = ref(null);
     const serial = ref(null);
@@ -318,37 +332,70 @@ export default defineComponent({
     const opcionesTipoEquipos = ref([]);
     const tipoEquipos = [
       { id: 1, name: "Monofásico" },
-      { id: 1, name: "Trifásico" },
+      { id: 2, name: "Trifásico" },
     ];
 
     function inicio() {
       opcionesTipoEquipos.value = helpers.loadList(tipoEquipos);
+      id.value = route.params.id;
+      if (id.value) {
+        getProduct(id.value);
+      }
       getClients();
     }
 
     function createProduct() {
+      helpers.showCargando();
       const data = {
-        clientId: clientId.value.value,
         reference: reference.value,
-        trademark: trademark.value,
+        tradeMark: tradeMark.value,
         bearings: bearings.value,
         model: model.value,
         serial: serial.value,
         potency: potency.value,
         voltage: voltage.value,
         current: current.value.label,
+        clientId: clientId.value.value,
       };
 
-      // helpers
-      //   .axiosPost(`${environments.API_URL}/product`, { data })
-      //   .then((response) => {
-      //     console.log(response);
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+      helpers
+        .axiosPost(`${environments.API_URL}/product`, data)
+        .then((response) => {
+          if (response.status === 201) {
+            helpers.showMessage("Producto creado exitosamente", 2000);
+          } else {
+            helpers.showAlert("Error creando el producto", 2000);
+          }
+          router.push("/productos");
+          helpers.hideCargando();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
-      console.log({ data });
+    function getProduct(id) {
+      helpers.showCargando();
+      helpers
+        .axiosGet(`${environments.API_URL}/product/${id}`)
+        .then((response) => {
+          clientId.value = {
+            label: response.data.product.client.name,
+            value: response.data.product.client.id,
+          };
+          reference.value = response.data.product.reference;
+          tradeMark.value = response.data.product.tradeMark;
+          bearings.value = response.data.product.bearings;
+          model.value = response.data.product.model;
+          serial.value = response.data.product.serial;
+          potency.value = response.data.product.potency;
+          voltage.value = response.data.product.voltage;
+          current.value = response.data.product.current;
+          helpers.hideCargando();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     function getClients() {
@@ -363,7 +410,46 @@ export default defineComponent({
     }
 
     function createClient() {
-      console.log("create client");
+      helpers.showCargando();
+      const data = {
+        name: name.value,
+        address: address.value,
+        phone: phone.value,
+        campus: campus.value,
+        email: email.value,
+      };
+
+      helpers
+        .axiosPost(`${environments.API_URL}/client`, data)
+        .then((response) => {
+          console.log(response);
+          if (response.status === 201) {
+            clientId.value = {
+              label:
+                response.data.data.client.name +
+                " " +
+                response.data.data.client.campus,
+              value: response.data.data.client.id,
+            };
+            clientOptions.value.push(clientId.value);
+            modalClient.value = false;
+            helpers.showMessage("Cliente creado exitosamente", 2000);
+          } else {
+            helpers.showAlert("Error creando el cliente", 2000);
+          }
+          helpers.hideCargando();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function cancelar() {
+      router.push({ name: "productos" });
+    }
+
+    function prueba() {
+      console.log("prueba");
     }
 
     onMounted(inicio);
@@ -378,8 +464,9 @@ export default defineComponent({
       campus,
       email,
       clientId,
+      prueba,
       reference,
-      trademark,
+      tradeMark,
       bearings,
       model,
       serial,
@@ -390,8 +477,10 @@ export default defineComponent({
       clientOptions,
       opcionesTipoEquipos,
       inicio,
+      cancelar,
       createProduct,
       createClient,
+      getProduct,
     };
   },
 });

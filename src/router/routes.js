@@ -30,7 +30,7 @@ const routes = [
       },
       {
         name: "crear-informe",
-        path: "/crear-informe/:id?",
+        path: "/reporte/product/:id?",
         component: () => import("src/components/informes/CrearInforme.vue"),
       },
     ],

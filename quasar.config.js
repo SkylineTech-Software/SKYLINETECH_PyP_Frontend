@@ -134,6 +134,14 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
 
+      appleMobileWebAppCapable: "yes",
+      appleMobileWebAppStatusBarStyle: "default",
+      manifest: {
+        appleTouchIcon: {
+          src: "assets/img/logopyp2.png",
+        },
+      },
+
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
       // if using workbox in InjectManifest mode
 
@@ -153,27 +161,57 @@ module.exports = configure(function (ctx) {
         theme_color: "#027be3",
         icons: [
           {
-            src: "icons/icon-128x128.png",
+            src: "icons/logopyp2.png",
+            sizes: "16x16",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
+            sizes: "32x32",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
+            sizes: "48x48",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
+            sizes: "72x72",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
+            sizes: "96x96",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
             sizes: "128x128",
             type: "image/png",
           },
           {
-            src: "icons/icon-192x192.png",
+            src: "icons/logopyp2.png",
+            sizes: "144x144",
+            type: "image/png",
+          },
+          {
+            src: "icons/logopyp2.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "icons/icon-256x256.png",
+            src: "icons/logopyp2.png",
             sizes: "256x256",
             type: "image/png",
           },
           {
-            src: "icons/icon-384x384.png",
+            src: "icons/logopyp2.png",
             sizes: "384x384",
             type: "image/png",
           },
           {
-            src: "icons/icon-512x512.png",
+            src: "icons/logopyp2.png",
             sizes: "512x512",
             type: "image/png",
           },

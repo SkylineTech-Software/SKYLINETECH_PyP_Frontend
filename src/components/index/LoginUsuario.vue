@@ -117,7 +117,7 @@ export default defineComponent({
           } else {
             helpers.showAlert("Usuario y/o contraseña incorrectos", 3000);
           }
-          router.push({ name: "inicio" });
+          router.push({ name: "productos" });
         })
         .catch((error) => {
           console.error(error);

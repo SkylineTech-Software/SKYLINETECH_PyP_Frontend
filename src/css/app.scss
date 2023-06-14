@@ -68,9 +68,14 @@ input:-webkit-autofill {
   background-position: center;
 }
 /**Crear producto*/
+.title-dark-green {
+  color: $dark-green;
+}
+
 .title-green {
   color: $medium-green;
 }
+
 .card {
   box-shadow: 0 1px 5px $light-green, 0 2px 2px $light-green;
   border: 1px solid $light-green;
