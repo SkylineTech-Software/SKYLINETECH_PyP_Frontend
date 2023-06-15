@@ -1,6 +1,22 @@
-import helpers from "src/helpers/helpers";
-
 const columns = [
+  {
+    name: "Producto",
+    label: "Producto",
+    field: "Producto",
+    align: "left",
+  },
+  {
+    name: "Cliente",
+    label: "Cliente",
+    field: "Cliente",
+    align: "left",
+  },
+  {
+    name: "Dirección",
+    label: "Dirección",
+    field: "Dirección",
+    align: "left",
+  },
   {
     name: "Técnico",
     label: "Técnico",
@@ -33,12 +49,6 @@ const columns = [
     name: "Observaciones",
     label: "Observaciones",
     field: "Observaciones",
-    align: "left",
-  },
-  {
-    name: "Producto",
-    label: "Producto",
-    field: "Producto",
     align: "left",
   },
 ];

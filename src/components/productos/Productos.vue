@@ -295,6 +295,14 @@ export default defineComponent({
       pwa.document.close();
     }
 
+    function filterProducts(value) {
+      const newData = rows.value.filter((row) => {
+        return row.tradeMark.toLowerCase().includes(value.toLowerCase());
+      });
+
+      rows.value = newData;
+    }
+
     onMounted(() => {
       inicio();
     });
@@ -314,6 +322,7 @@ export default defineComponent({
       abrirModal,
       printImage,
       deleteProduct,
+      filterProducts,
     };
   },
 });

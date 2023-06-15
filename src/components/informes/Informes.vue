@@ -49,6 +49,17 @@
                             style="background-color: #678966; color: #fff"
                         /></q-td>
                         <q-td>
+                          {{ col.product.reference }}
+                        </q-td>
+                        <q-td
+                          >{{ col.product.client.name }}
+                          {{
+                            col.product.client.campus &&
+                            `- ${col.product.client.campus}`
+                          }}</q-td
+                        >
+                        <q-td>{{ col.product.client.address }}</q-td>
+                        <q-td>
                           {{ col.technical }}
                         </q-td>
                         <q-td>
@@ -60,23 +71,29 @@
                         <q-td>
                           <q-btn
                             size="0.8em"
-                            @click="viewParts()"
+                            @click="viewParts(col.replacementParts)"
                             style="
                               cursor: pointer;
                               background-color: #678966;
                               color: #fff;
                             "
-                            >{{ "Ver más" }}</q-btn
+                            >{{ "Ver repuestos" }}</q-btn
                           >
                         </q-td>
                         <q-td>
-                          {{ "col.materials" }}
+                          <q-btn
+                            size="0.8em"
+                            @click="viewMaterials(col.materials)"
+                            style="
+                              cursor: pointer;
+                              background-color: #678966;
+                              color: #fff;
+                            "
+                            >{{ "Ver materiales" }}</q-btn
+                          >
                         </q-td>
                         <q-td>
                           {{ col.observations }}
-                        </q-td>
-                        <q-td>
-                          {{ col.product.reference }}
                         </q-td>
                       </q-tr>
                     </template>
@@ -87,6 +104,109 @@
           </div>
         </div>
       </div>
+
+      <template>
+        <q-page>
+          <q-dialog v-model="modalParts" persistent full-width>
+            <div class="row">
+              <q-card
+                class="col-xs-10 col-sm-6 col-md-4 col-lg-3 col-xl-3"
+                style="margin: auto"
+              >
+                <div class="q-pa-md row col-12">
+                  <div class="col-md-12 col-xs-12 col-sm-12">
+                    <div class="q-ma-sm">
+                      <q-item-label
+                        class="title-green text-h6 text-bold q-pb-md"
+                      >
+                        {{ "Repuestos y/o correctivos" }}
+                      </q-item-label>
+                      <q-card class="card q-pb-md" style="min-height: 150px">
+                        <q-card-section class="col-12 text-center">
+                          <div
+                            class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                          >
+                            <div v-for="part in informParts" :key="part.name">
+                              <div class="q-mb-sm">
+                                <span
+                                  ><b>{{ "Nombre: " }}</b
+                                  >{{ part.name }}
+                                  <b class="q-ml-md"> {{ "Cantidad: " }}</b
+                                  >{{ part.mount }}
+                                  <b class="q-ml-md"> {{ "Referencia: " }}</b
+                                  >{{ part.reference }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </q-card-section>
+                      </q-card>
+                    </div>
+                  </div>
+                </div>
+                <q-card-actions align="center">
+                  <q-btn
+                    label="Cerrar"
+                    @click="modalParts = false"
+                    class="q-ma-sm btn-add"
+                  />
+                </q-card-actions>
+              </q-card>
+            </div>
+          </q-dialog>
+        </q-page>
+      </template>
+
+      <template>
+        <q-page>
+          <q-dialog v-model="modalMaterials" persistent full-width>
+            <div class="row">
+              <q-card
+                class="col-xs-10 col-sm-6 col-md-4 col-lg-3 col-xl-3"
+                style="margin: auto"
+              >
+                <div class="q-pa-md row col-12">
+                  <div class="col-md-12 col-xs-12 col-sm-12">
+                    <div class="q-ma-sm">
+                      <q-item-label
+                        class="title-green text-h6 text-bold q-pb-md"
+                      >
+                        {{ "Materiales" }}
+                      </q-item-label>
+                      <q-card class="card q-pb-md" style="min-height: 150px">
+                        <q-card-section class="col-12 text-center">
+                          <div
+                            class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 q-px-sm q-py-sm"
+                          >
+                            <div
+                              v-for="part in informMaterials"
+                              :key="part.name"
+                            >
+                              <div>
+                                <span
+                                  ><b>{{ "Nombre: " }}</b
+                                  >{{ part.name }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </q-card-section>
+                      </q-card>
+                    </div>
+                  </div>
+                </div>
+                <q-card-actions align="center">
+                  <q-btn
+                    label="Cerrar"
+                    @click="modalMaterials = false"
+                    class="q-ma-sm btn-add"
+                  />
+                </q-card-actions>
+              </q-card>
+            </div>
+          </q-dialog>
+        </q-page>
+      </template>
     </div>
   </q-page>
 </template>
@@ -104,6 +224,12 @@ export default defineComponent({
   setup() {
     const rows = ref([]);
 
+    const modalParts = ref(false);
+    const modalMaterials = ref(false);
+
+    const informParts = ref([]);
+    const informMaterials = ref([]);
+
     function inicio() {
       getReports();
     }
@@ -119,8 +245,16 @@ export default defineComponent({
         });
     }
 
-    function viewParts() {
-      console.log("viewParts");
+    function viewParts(payload) {
+      modalParts.value = true;
+      informParts.value = payload;
+      console.log(informParts.value);
+    }
+
+    function viewMaterials(payload) {
+      modalMaterials.value = true;
+      informMaterials.value = payload;
+      console.log(informMaterials.value);
     }
 
     onMounted(() => {
@@ -133,7 +267,12 @@ export default defineComponent({
       helpers,
       inicio,
       viewParts,
+      viewMaterials,
       getReports,
+      modalParts,
+      modalMaterials,
+      informParts,
+      informMaterials,
     };
   },
 });

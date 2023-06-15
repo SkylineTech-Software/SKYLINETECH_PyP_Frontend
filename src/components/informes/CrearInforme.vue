@@ -220,6 +220,11 @@
                     @click="selectProduct()"
                     class="q-ma-sm btn-add"
                   />
+                  <q-btn
+                    label="Cancelar"
+                    :to="`/informes`"
+                    class="q-ma-sm btn-cancel"
+                  />
                 </q-card-actions>
               </q-card>
             </div>
