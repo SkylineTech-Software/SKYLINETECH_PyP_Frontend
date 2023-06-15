@@ -54,4 +54,4 @@ const columns = [
   },
 ];
 
-module.exports = columns;
+export default columns;

@@ -17,14 +17,69 @@
                   <q-table
                     style="display: grid; box-shadow: none"
                     title="Informes"
-                    :rows="[]"
-                    :columns="[]"
+                    :rows="[rows]"
+                    :columns="columns"
                     row-key="name"
                     hide-bottom=""
                     binary-state-sort
                   >
-                    <template v-slot:header=""></template>
-                    <template v-slot:body=""></template>
+                    <template v-slot:header="props">
+                      <q-tr :props="props">
+                        <q-th auto-width />
+                        <q-th
+                          v-for="col in props.cols"
+                          :key="col.name"
+                          :props="props"
+                        >
+                          {{ col.label }}
+                        </q-th>
+                      </q-tr>
+                    </template>
+                    <template v-slot:body="props">
+                      <q-tr
+                        :props="props"
+                        v-for="col in props.row"
+                        :key="col.name"
+                      >
+                        <q-td
+                          ><q-btn
+                            size="sm"
+                            padding="xs"
+                            icon="edit_note"
+                            style="background-color: #678966; color: #fff"
+                        /></q-td>
+                        <q-td>
+                          {{ col.technical }}
+                        </q-td>
+                        <q-td>
+                          {{ col.dateInform.split("T")[0] }}
+                        </q-td>
+                        <q-td>
+                          {{ col.scope }}
+                        </q-td>
+                        <q-td>
+                          <q-btn
+                            size="0.8em"
+                            @click="viewParts()"
+                            style="
+                              cursor: pointer;
+                              background-color: #678966;
+                              color: #fff;
+                            "
+                            >{{ "Ver más" }}</q-btn
+                          >
+                        </q-td>
+                        <q-td>
+                          {{ "col.materials" }}
+                        </q-td>
+                        <q-td>
+                          {{ col.observations }}
+                        </q-td>
+                        <q-td>
+                          {{ col.product.reference }}
+                        </q-td>
+                      </q-tr>
+                    </template>
                   </q-table>
                 </q-card-section>
               </div>
@@ -40,6 +95,9 @@
 import { defineComponent, ref, onMounted } from "vue";
 import helpers from "src/helpers/helpers.js";
 import environments from "assets/environment/environment.js";
+import columnsReports from "src/columns/report.js";
+
+const columns = columnsReports;
 
 export default defineComponent({
   name: "Listado-Informes",
@@ -51,14 +109,18 @@ export default defineComponent({
     }
 
     function getReports() {
-      // helpers
-      //   .axiosGet(`${environments.API_URL}/product`)
-      //   .then((response) => {
-      //     rows.value = response.data.products;
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+      helpers
+        .axiosGet(`${environments.API_URL}/informe-producto`)
+        .then((response) => {
+          rows.value = response.data.informProducts;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function viewParts() {
+      console.log("viewParts");
     }
 
     onMounted(() => {
@@ -67,7 +129,10 @@ export default defineComponent({
 
     return {
       rows,
+      columns,
+      helpers,
       inicio,
+      viewParts,
       getReports,
     };
   },

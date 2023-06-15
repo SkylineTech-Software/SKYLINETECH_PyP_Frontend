@@ -162,7 +162,7 @@
                       label="Editar"
                       class="q-ma-sm btn-add"
                       no-caps
-                      @click="prueba()"
+                      @click="editProduct()"
                       v-if="id"
                     />
                     <q-btn
@@ -374,6 +374,36 @@ export default defineComponent({
         });
     }
 
+    function editProduct() {
+      helpers.showCargando();
+      const data = {
+        reference: reference.value,
+        tradeMark: tradeMark.value,
+        bearings: bearings.value,
+        model: model.value,
+        serial: serial.value,
+        potency: potency.value,
+        voltage: voltage.value,
+        current: current.value.label,
+        clientId: clientId.value.value,
+      };
+
+      helpers
+        .axiosPut(`${environments.API_URL}/product/${id.value}`, data)
+        .then((response) => {
+          if (response.status === 200) {
+            helpers.showMessage("Producto editado exitosamente", 2000);
+          } else {
+            helpers.showAlert("Error creando el producto", 2000);
+          }
+          router.push("/productos");
+          helpers.hideCargando();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
     function getProduct(id) {
       helpers.showCargando();
       helpers
@@ -448,11 +478,9 @@ export default defineComponent({
       router.push({ name: "productos" });
     }
 
-    function prueba() {
-      console.log("prueba");
-    }
-
-    onMounted(inicio);
+    onMounted(() => {
+      inicio();
+    });
 
     return {
       id,
@@ -464,7 +492,6 @@ export default defineComponent({
       campus,
       email,
       clientId,
-      prueba,
       reference,
       tradeMark,
       bearings,
@@ -481,6 +508,7 @@ export default defineComponent({
       createProduct,
       createClient,
       getProduct,
+      editProduct,
     };
   },
 });

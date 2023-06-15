@@ -13,9 +13,15 @@
           "
           aria-label="Menu"
           @click="toggleLeftDrawer"
-        />
+          ><q-tooltip> {{ tooltipMenu }} </q-tooltip>
+        </q-btn>
 
         <q-toolbar-title> Pumps S.A.S </q-toolbar-title>
+        <div class="q-gutter-sm">
+          <q-icon name="logout" size="2em" style="cursor: pointer">
+            <q-tooltip>Cerrar sesión</q-tooltip>
+          </q-icon>
+        </div>
       </q-toolbar>
     </q-header>
     <q-drawer class="aside-menu" v-model="leftDrawerOpen" side="left">
@@ -48,6 +54,10 @@
           <q-item-label class="q-pl-sm">Crear informe</q-item-label>
         </q-item>
         <hr />
+        <q-item clickable :to="'/productos'" class="flex row items-center">
+          <q-icon size="2em" name="logout" />
+          <q-item-label class="q-pl-sm">Cerrar sesión</q-item-label>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -65,8 +75,14 @@ export default defineComponent({
   name: "HomePage",
 
   setup() {
-    const leftDrawerOpen = ref(true);
-    const icon = ref("arrow_back");
+    const leftDrawerOpen = ref(false);
+    const tooltipMenu = ref("Abrir menú");
+    const icon = ref("arrow_forward");
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+      icon.value = leftDrawerOpen.value ? "arrow_back" : "arrow_forward";
+      tooltipMenu.value = leftDrawerOpen.value ? "Cerrar menú" : "Abrir menú";
+    };
     const handleSwipe = (e) => {
       if (e.direction === "right") {
         leftDrawerOpen.value = true;
@@ -80,11 +96,9 @@ export default defineComponent({
     return {
       logo,
       icon,
+      tooltipMenu,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-        icon.value = leftDrawerOpen.value ? "arrow_back" : "arrow_forward";
-      },
+      toggleLeftDrawer,
     };
   },
 });

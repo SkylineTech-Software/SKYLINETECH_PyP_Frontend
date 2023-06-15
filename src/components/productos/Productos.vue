@@ -20,8 +20,7 @@
                     :rows="[rows]"
                     :columns="columns"
                     row-key="name"
-                    hide-bottom=""
-                    binary-state-sort
+                    hide-bottom
                   >
                     <template v-slot:header="props">
                       <q-tr :props="props">
@@ -254,9 +253,10 @@ export default defineComponent({
     function deleteProduct(id) {
       confirmDelete.value = true;
       helpers
-        .axiosPatch(`${environments.API_URL}/delete/product/${id}`)
+        .axiosPatch(`${environments.API_URL}/product/remove/${id}`)
         .then((response) => {
-          if (response.status === 201) {
+          console.log(response);
+          if (response.status === 200) {
             helpers.showMessage("Equipo eliminado exitosamente", 2000);
             confirmDelete.value = false;
             inicio();
