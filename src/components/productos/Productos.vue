@@ -270,13 +270,16 @@ export default defineComponent({
     }
 
     function abrirModal(col) {
+      const campus = col.client.campus && ` - ${col.client.campus}`;
+
       urlQRCode.value = col.qrCode;
       reference.value = col.reference;
       potency.value = col.potency;
       voltage.value = col.voltage;
       current.value = col.current;
-      client.value = col.client.name;
+      client.value = col.client.name + campus;
       model.value = col.model;
+
       modalQr.value = true;
     }
 
