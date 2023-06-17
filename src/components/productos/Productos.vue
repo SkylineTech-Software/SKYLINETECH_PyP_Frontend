@@ -1,3 +1,11 @@
+<style>
+.block {
+  color: #fff !important;
+}
+.q-btn--flat:before {
+  background-color: rgba(12, 44, 26, 0.527);
+}
+</style>
 <template>
   <q-page>
     <div class="row">
@@ -106,6 +114,8 @@
                     :max="totalPages"
                     class="custom-pagination q-mt-md"
                     active-color="teal-10"
+                    :max-pages="4"
+                    :boundary-numbers="false"
                   />
                 </q-card-section>
               </div>
@@ -209,7 +219,7 @@
               <p>Está seguro de eliminar el equipo?</p>
             </q-card-section>
 
-            <q-card-actions align="right">
+            <q-card-actions align="center">
               <q-btn
                 label="Eliminar"
                 @click="deleteProduct()"

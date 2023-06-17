@@ -17,7 +17,7 @@
                   <q-table
                     style="display: grid; box-shadow: none"
                     title="Informes"
-                    :rows="[rows]"
+                    :rows="[currentPageItems]"
                     :columns="columns"
                     row-key="name"
                     hide-bottom=""
@@ -98,6 +98,14 @@
                       </q-tr>
                     </template>
                   </q-table>
+                  <q-pagination
+                    v-model="currentPage"
+                    :max="totalPages"
+                    class="custom-pagination q-mt-md"
+                    active-color="teal-10"
+                    :max-pages="4"
+                    :boundary-numbers="false"
+                  />
                 </q-card-section>
               </div>
             </q-card>
@@ -212,7 +220,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, computed } from "vue";
 import helpers from "src/helpers/helpers.js";
 import environments from "assets/environment/environment.js";
 import columnsReports from "src/columns/report.js";
@@ -229,6 +237,9 @@ export default defineComponent({
 
     const informParts = ref([]);
     const informMaterials = ref([]);
+
+    const currentPage = ref(1);
+    const perPage = 10;
 
     function inicio() {
       getReports();
@@ -257,6 +268,16 @@ export default defineComponent({
       console.log(informMaterials.value);
     }
 
+    const currentPageItems = computed(() => {
+      const startIndex = (currentPage.value - 1) * perPage;
+      const endIndex = startIndex + perPage;
+      return rows.value.slice(startIndex, endIndex);
+    });
+
+    const totalPages = computed(() => {
+      return Math.ceil(rows.value.length / perPage);
+    });
+
     onMounted(() => {
       inicio();
     });
@@ -265,14 +286,17 @@ export default defineComponent({
       rows,
       columns,
       helpers,
-      inicio,
-      viewParts,
-      viewMaterials,
-      getReports,
+      currentPage,
+      currentPageItems,
+      totalPages,
       modalParts,
       modalMaterials,
       informParts,
       informMaterials,
+      inicio,
+      viewParts,
+      viewMaterials,
+      getReports,
     };
   },
 });
