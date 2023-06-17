@@ -78,8 +78,9 @@
                       >
                         <q-input
                           dense
+                          label="Fecha"
                           outlined
-                          v-model="date"
+                          v-model="dateInform"
                           mask="date"
                           :rules="['date']"
                         >
@@ -91,7 +92,7 @@
                                 transition-hide="scale"
                               >
                                 <q-date
-                                  v-model="date"
+                                  v-model="dateInform"
                                   color="teal-10"
                                   :locale="myLocale"
                                 >
@@ -126,7 +127,7 @@
                           dense
                           outlined
                           label="Técnico"
-                          v-model="managers"
+                          v-model="technical"
                         ></q-input>
                       </div>
                       <div
@@ -222,7 +223,7 @@
                   />
                   <q-btn
                     label="Cancelar"
-                    :to="`/informes`"
+                    to="/informes"
                     class="q-ma-sm btn-cancel"
                   />
                 </q-card-actions>
@@ -257,12 +258,11 @@ export default defineComponent({
     const campus = ref(null);
     const tradeMark = ref(null);
     const reference = ref(null);
-    const date = ref(null);
+    const dateInform = ref(null);
     const phone = ref(null);
-    const managers = ref(null);
+    const technical = ref(null);
     const scope = ref(null);
     const scopeList = helpers.loadList(lists.scopeList);
-    const numberManagers = ref(0);
     const observations = ref(null);
     const myLocale = helpers.getLocale();
     const viewDate = ref(false);
@@ -333,18 +333,17 @@ export default defineComponent({
       scope,
       tradeMark,
       reference,
-      date,
+      dateInform,
       viewDate,
       scopeList,
       phone,
-      managers,
+      technical,
       product,
       myLocale,
       productList,
       modalProducts,
       observations,
       redirectInform,
-      numberManagers,
       inicio,
       cancelar,
       getProduct,

@@ -17,7 +17,7 @@
                   <q-table
                     style="display: grid; box-shadow: none"
                     title="Equipos"
-                    :rows="[rows]"
+                    :rows="[currentPageItems]"
                     :columns="columns"
                     row-key="name"
                     hide-bottom
@@ -55,7 +55,9 @@
                             size="sm"
                             padding="xs"
                             icon="delete_outline"
-                            @click="deleteProduct(col.id)"
+                            @click="
+                              (confirmDelete = true), (productId = col.id)
+                            "
                             style="background-color: #678966; color: #fff"
                         /></q-td>
                         <q-td
@@ -99,6 +101,12 @@
                       </q-tr>
                     </template>
                   </q-table>
+                  <q-pagination
+                    v-model="currentPage"
+                    :max="totalPages"
+                    class="custom-pagination q-mt-md"
+                    active-color="teal-10"
+                  />
                 </q-card-section>
               </div>
             </q-card>
@@ -161,10 +169,14 @@
                               >{{ current }}</span
                             >
                             <br />
-                            <span
-                              ><b>{{ "Cliente: " }}</b
-                              >{{ client }}</span
-                            >
+                            <span>
+                              <b>
+                                {{ "Cliente: " }}
+                              </b>
+                              {{ client }}
+                              {{ ` - ${clientCampus ? clientCampus : ""}` }}
+                            </span>
+                            <!--  -->
                           </div>
                         </q-card-section>
                       </q-card>
@@ -198,11 +210,14 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-btn label="Eliminar" color="green-8" class="q-pt-sm" />
+              <q-btn
+                label="Eliminar"
+                @click="deleteProduct()"
+                class="q-pt-sm btn-add"
+              />
               <q-btn
                 label="Cancelar"
-                color="teal-9"
-                class="q-pt-sm"
+                class="q-pt-sm btn-cancel"
                 v-close-popup
               />
             </q-card-actions>
@@ -214,7 +229,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, computed } from "vue";
 import helpers from "src/helpers/helpers.js";
 import environments from "assets/environment/environment.js";
 import columnsProducts from "src/columns/products.js";
@@ -234,6 +249,10 @@ export default defineComponent({
     const voltage = ref(null);
     const current = ref(null);
     const client = ref(null);
+    const clientCampus = ref(null);
+    const productId = ref(null);
+    const currentPage = ref(1);
+    const perPage = 10;
 
     function inicio() {
       getProducts();
@@ -250,14 +269,13 @@ export default defineComponent({
         });
     }
 
-    function deleteProduct(id) {
-      confirmDelete.value = true;
+    function deleteProduct() {
       helpers
-        .axiosPatch(`${environments.API_URL}/product/remove/${id}`)
+        .axiosPatch(`${environments.API_URL}/product/remove/${productId.value}`)
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             helpers.showMessage("Equipo eliminado exitosamente", 2000);
+            productId.value = null;
             confirmDelete.value = false;
             inicio();
           } else {
@@ -270,16 +288,14 @@ export default defineComponent({
     }
 
     function abrirModal(col) {
-      const campus = col.client.campus && ` - ${col.client.campus}`;
-
       urlQRCode.value = col.qrCode;
       reference.value = col.reference;
       potency.value = col.potency;
       voltage.value = col.voltage;
       current.value = col.current;
-      client.value = col.client.name + campus;
+      client.value = col.client.name;
       model.value = col.model;
-
+      clientCampus.value = col.client.campus;
       modalQr.value = true;
     }
 
@@ -298,13 +314,15 @@ export default defineComponent({
       pwa.document.close();
     }
 
-    function filterProducts(value) {
-      const newData = rows.value.filter((row) => {
-        return row.tradeMark.toLowerCase().includes(value.toLowerCase());
-      });
+    const currentPageItems = computed(() => {
+      const startIndex = (currentPage.value - 1) * perPage;
+      const endIndex = startIndex + perPage;
+      return rows.value.slice(startIndex, endIndex);
+    });
 
-      rows.value = newData;
-    }
+    const totalPages = computed(() => {
+      return Math.ceil(rows.value.length / perPage);
+    });
 
     onMounted(() => {
       inicio();
@@ -321,11 +339,15 @@ export default defineComponent({
       voltage,
       current,
       client,
+      productId,
+      clientCampus,
       confirmDelete,
+      currentPage,
+      currentPageItems,
+      totalPages,
       abrirModal,
       printImage,
       deleteProduct,
-      filterProducts,
     };
   },
 });
