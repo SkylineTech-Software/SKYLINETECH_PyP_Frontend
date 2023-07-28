@@ -268,6 +268,26 @@ export default defineComponent({
     const viewDate = ref(false);
     const modalProducts = ref(false);
     const redirectInform = ref(false);
+    const replacementParts = ref([
+      {
+        name: "bobina",
+        mount: 1,
+        reference: "SSNC7",
+      },
+      {
+        name: "ventilador",
+        mount: 3,
+        reference: "ASDASD",
+      },
+    ]);
+    const materials = ref([
+      {
+        name: "cable",
+      },
+      {
+        name: "bomba",
+      },
+    ]);
 
     function inicio() {
       getProducts();
@@ -277,6 +297,35 @@ export default defineComponent({
       } else {
         getProduct(id);
       }
+    }
+
+    function createInform() {
+      helpers.showCargando();
+      const data = {
+        technical: technical.value,
+        scope: scope.value,
+        dateInform: dateInform.value,
+        scope: scope.value.label,
+        replacementParts: replacementParts.value,
+        materials: materials.value,
+        observations: observations.value,
+        productId: idModal.value,
+      };
+
+      helpers
+        .axiosPost(`${environments.API_URL}/informe-producto`, data)
+        .then((response) => {
+          if (response.status === 201) {
+            helpers.showMessage("Informe creado exitosamente", 2000);
+          } else {
+            helpers.showAlert("Error creando el producto", 2000);
+          }
+          router.push("/informes");
+          helpers.hideCargando();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     function selectProduct() {
@@ -347,6 +396,7 @@ export default defineComponent({
       inicio,
       cancelar,
       getProduct,
+      createInform,
       selectProduct,
     };
   },

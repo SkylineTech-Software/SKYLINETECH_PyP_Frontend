@@ -259,13 +259,11 @@ export default defineComponent({
     function viewParts(payload) {
       modalParts.value = true;
       informParts.value = payload;
-      console.log(informParts.value);
     }
 
     function viewMaterials(payload) {
       modalMaterials.value = true;
       informMaterials.value = payload;
-      console.log(informMaterials.value);
     }
 
     const currentPageItems = computed(() => {
