@@ -309,7 +309,7 @@ export default defineComponent({
         replacementParts: replacementParts.value,
         materials: materials.value,
         observations: observations.value,
-        productId: idModal.value,
+        productId: idModal.value || route.params.id,
       };
 
       helpers
